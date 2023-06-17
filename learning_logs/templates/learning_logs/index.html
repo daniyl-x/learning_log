@@ -1,6 +1,31 @@
 {% extends "learning_logs/base.html" %}
 
+{% block header %}
+  <div class="p-2 mb-5 bg-secondary bg-opacity-25 rounded-3">
+    <div class="container-fluid py-3">
+      <h1 class="display-5 fw-bold">Track your learning</h1>
+
+      {% if user.is_authenticated == False %}
+        <p class="col-md-8 fs-4">
+          Register an account to make your own Learning Log,
+          and list the topics you're learning about.
+        </p>
+      {% endif %}
+
+      <p class="col-md-8 fs-4">
+        Whenever you learn something new about a topic, make an entry
+        summarizing what you've learned.
+      </p>
+
+      {% if user.is_authenticated == False %}
+        <a type="button" class="btn btn-dark btn-outline-light btn-lg"
+          href="{% url 'users:register' %}">
+          Register an account
+        </a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock header %}
+
 {% block content %}
-<p>Learning Log helps you keep track of your learning,
-  for any topic you're learning about.</p>
 {% endblock content %}

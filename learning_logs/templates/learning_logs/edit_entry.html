@@ -1,12 +1,28 @@
 {% extends "learning_logs/base.html" %}
+{% load bootstrap5 %}
+
+{% block header %}
+  <div class="card border-0 mb-3 bg-secondary">
+    <div class="card-header text-light border-0">
+      <span class="h3">{{ topic }}</span>
+      <a class="btn btn-outline-light py-1 float-end"
+         href="{% url 'learning_logs:topic' topic.id %}">
+        <b>< Back</b>
+      </a>
+    </div>
+  </div>
+  <h2>Edit entry:</h2>
+{% endblock header %}
 
 {% block content %}
-<p><a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a></p>
+  <form action="{% url 'learning_logs:edit_entry' entry.id %}" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
 
-<p>Edit entry:</p>
-<form action="{% url 'learning_logs:edit_entry' entry.id %}" method="post">
-  {% csrf_token%}
-  {{ form.as_p }}
-  <button name="submit">save changes</button>
-</form>
+    {% buttons %}
+      <button name="submit" class="btn btn-outline-dark">
+        Save changes
+      </button>
+    {% endbuttons %}
+  </form>
 {% endblock content %}
