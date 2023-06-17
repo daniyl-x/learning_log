@@ -7,18 +7,6 @@ from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
 
 
-def check_topic_publicity(request, topic):
-    """Проверяет, публична ли тема"""
-    if not topic.public:
-        raise Http404
-
-
-def check_topic_ownership(request, topic):
-    """Проверяет, является ли пользователь владельцем темы"""
-    if request.user != topic.owner:
-        raise Http404
-
-
 def index(request):
     """Домашняя страница приложения Learning Log"""
     return render(request, 'learning_logs/index.html')
@@ -44,7 +32,7 @@ def topic(request, topic_id):
     topic = get_object_or_404(Topic, id=topic_id)
     # Проверка доступности темы
     try:
-        check_topic_publicity(request, topic)
+        check_topic_publicity(topic)
     except Http404:
         check_topic_ownership(request, topic)
 
@@ -115,3 +103,15 @@ def edit_entry(request, entry_id):
                                                 args=[topic.id]))
     context = {'entry': entry, 'topic': topic, 'form': form}
     return render(request, 'learning_logs/edit_entry.html', context)
+
+
+def check_topic_publicity(topic: Topic) -> None:
+    """Проверяет, публична ли тема"""
+    if not topic.public:
+        raise Http404
+
+
+def check_topic_ownership(request, topic: Topic) -> None:
+    """Проверяет, является ли пользователь владельцем темы"""
+    if request.user != topic.owner:
+        raise Http404

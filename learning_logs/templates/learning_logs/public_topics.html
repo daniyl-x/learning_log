@@ -12,7 +12,7 @@
       <a class="list-group-item list-group-item-action px-4"
          href="{% url 'learning_logs:topic' topic.id %}">
 
-        <span class="badge bg-secondary rounded-pill">
+        <span class="w-auto badge bg-secondary rounded-pill">
           {{ topic.entry_set.all|length }}
         </span>
         <span class="px-1">{{ topic }}</span>
