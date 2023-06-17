@@ -134,7 +134,9 @@ if os.getcwd() == '/app':
     # Поддержка заголовка 'X-Forwarded-Proto' для request.is_secure()
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     # Разрешены все заголовки хостов
-    ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ['mylearninglog-ll.herokuapp.com']
+
+    DEBUG = False
     # Конфигурация статических ресурсов
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
