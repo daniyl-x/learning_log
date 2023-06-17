@@ -4,10 +4,14 @@
   <div class="card border-0 mb-4 bg-secondary">
     <div class="card-header text-light border-0">
       <span class="h3">{{ topic }}</span>
+
+      {% if topic.owner == user %}
       <a class="btn btn-outline-light py-1 float-end"
          href="{% url 'learning_logs:new_entry' topic.id %}">
         <b>+ Add new entry</b>
       </a>
+      {% endif %}
+
     </div>
   </div>
 {% endblock header %}
@@ -19,10 +23,12 @@
     <div class="card border-dark mb-3">
       <div class="card-header">
         <b>{{ entry.date_added|date:'d M, Y H:i' }}</b>
+        {% if topic.owner == user %}
         <a class="btn btn-outline-secondary p-1 float-end"
            href="{% url 'learning_logs:edit_entry' entry.id %}">
           Edit entry
         </a>
+        {% endif %}
       </div>
       <div class="card-body text-dark">
         <p class="card-text">{{ entry.text }}</p>

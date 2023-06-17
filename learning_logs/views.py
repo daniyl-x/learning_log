@@ -7,6 +7,18 @@ from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
 
 
+def check_topic_publicity(request, topic):
+    """Проверяет, публична ли тема"""
+    if not topic.public:
+        raise Http404
+
+
+def check_topic_ownership(request, topic):
+    """Проверяет, является ли пользователь владельцем темы"""
+    if request.user != topic.owner:
+        raise Http404
+
+
 def index(request):
     """Домашняя страница приложения Learning Log"""
     return render(request, 'learning_logs/index.html')
@@ -14,24 +26,27 @@ def index(request):
 
 @login_required
 def topics(request):
-    """Выводит список тем"""
-    topics = Topic.objects.filter(owner=request.user).order_by('date_added')
+    """Выводит список тем авторизованного пользователя"""
+    topics = Topic.objects.filter(owner=request.user).order_by('-date_added')
     context = {'topics': topics}
     return render(request, 'learning_logs/topics.html', context)
 
 
-def check_topic_owner(request, topic):
-    """Проверяет, принадлежит ли тема текущему пользователю"""
-    if topic.owner != request.user:
-        raise Http404
+def public_topics(request):
+    """Вывод публичных тем"""
+    public_topics = Topic.objects.filter(public=True).order_by('-date_added')
+    context = {'public_topics': public_topics}
+    return render(request, 'learning_logs/public_topics.html', context)
 
 
-@login_required
 def topic(request, topic_id):
     """Выводит одну тему и все ее записи"""
     topic = get_object_or_404(Topic, id=topic_id)
-    # Проверка владельца темы
-    check_topic_owner(request, topic)
+    # Проверка доступности темы
+    try:
+        check_topic_publicity(request, topic)
+    except Http404:
+        check_topic_ownership(request, topic)
 
     entries = topic.entry_set.order_by('-date_added')
     context = {'topic': topic, 'entries': entries}
@@ -62,7 +77,7 @@ def new_entry(request, topic_id):
     """Добавляет новую запись по конкретной теме"""
     topic = get_object_or_404(Topic, id=topic_id)
     # Проверка принадлежности темы пользователю
-    check_topic_owner(request, topic)
+    check_topic_ownership(request, topic)
 
     if request.method != 'POST':
         # Данные не отправлялись; создается пустая форма
@@ -85,8 +100,8 @@ def edit_entry(request, entry_id):
     """Редактирует существующую запись"""
     entry = get_object_or_404(Entry, id=entry_id)
     topic = entry.topic
-    # Проверка владельца темы
-    check_topic_owner(request, topic)
+    # Проверка принадлежности темы
+    check_topic_ownership(request, topic)
 
     if request.method != 'POST':
         # Исходный запрос; форма заполняется данными текущей записи

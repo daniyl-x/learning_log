@@ -1,0 +1,25 @@
+{% extends "learning_logs/base.html" %}
+
+{% block header %}
+  <h1>Public Topics</h1>
+{% endblock header %}
+
+{% block content %}
+
+  <div class="list-group py-2">
+
+    {% for topic in public_topics %}
+      <a class="list-group-item list-group-item-action px-4"
+         href="{% url 'learning_logs:topic' topic.id %}">
+
+        <span class="badge bg-secondary rounded-pill">
+          {{ topic.entry_set.all|length }}
+        </span>
+        <span class="px-1">{{ topic }}</span>
+      </a>
+    {% empty %}
+      <p class="list-group-item fs-5">No public topics have been added yet</p>
+    {% endfor %}
+
+  </div>
+{% endblock content %}

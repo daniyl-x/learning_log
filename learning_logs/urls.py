@@ -7,8 +7,10 @@ app_name = 'learning_logs'
 urlpatterns = [
     # Домашняя страница
     path('', views.index, name='index'),
-    # Вывод всех тем
+    # Вывод приватных тем
     path('topics/', views.topics, name='topics'),
+    # Вывод публичных тем
+    path('public_topics/', views.public_topics, name='public_topics'),
     # Страница с подробной информацией по отдельной теме
     path('topics/<int:topic_id>', views.topic, name='topic'),
     # Страница для добавления новой темы
