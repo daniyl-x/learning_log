@@ -1,4 +1,7 @@
 ll_env/
 __pycache__/
+learning_log/__pycache__/
+learning_logs/__pycache__/
+users/__pycache__/
 .idea/
 db.sqlite3
